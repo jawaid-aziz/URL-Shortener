@@ -1,5 +1,6 @@
 const express = require('express')
 const connectToMongoDB = require('./database')
+const cors = require('cors')
 const URLRoute = require('./routes/url')
 const URL = require('./models/url')
 const app = express();
@@ -10,7 +11,7 @@ connectToMongoDB("mongodb://localhost:27017/url-shortener")
 .catch((error) => { console.log("Error: ", error) })
 
 app.use(express.json());
-
+app.use(cors());
 app.use("/url", URLRoute);
 
 app.get('/:shortId', async (req, res) => {
@@ -19,7 +20,7 @@ app.get('/:shortId', async (req, res) => {
         { shortId },
         {
             $push: {
-                visitHisotry: {
+                visitHistory: {
                     timestamp: Date.now()
                 },
             },
